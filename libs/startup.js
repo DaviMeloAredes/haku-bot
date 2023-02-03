@@ -1,9 +1,11 @@
 require('dotenv/config');
 
-const { login } = require('./client');
-const { APP_TOKEN } = process.env;
+const client = require('./client');
 
-login(APP_TOKEN)
-    .then(function () {
-        console.log('app on')
-    });
+(async function () {
+    const eventController = require('./controllers/EventController/EventController');
+        
+    await eventController.handleEvents();
+})();
+
+client.login(process.env.APP_TOKEN);
