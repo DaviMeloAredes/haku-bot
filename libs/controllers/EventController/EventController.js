@@ -12,7 +12,7 @@ class EventController {
         this.#events.forEach(event => {
             try {
                 client.on(event.name, 
-                    function (args) { event.run(args) }
+                    (args) => event.run(args)
                 );
             } catch (e) {
                 console.log(e);
@@ -21,12 +21,9 @@ class EventController {
     }
 
     addEvent (event) {
-        const fields = {
-            name: event.name,
-            run: event.run
-        }
+       const { name, run } = event;
 
-        if (!fields.name || !fields.run) 
+        if (!name || !run) 
             throw new Error('Invalid/Missing event properties.');
 
         this.#events.push(event);
@@ -36,10 +33,10 @@ class EventController {
         const path = 'libs/controllers/EventController/events/**/**.js';
         const events = await fg(path);
     
-        const getEventsProps = function () {
+        const getEventsProps = () => {
             let eventsProps = [];
 
-            events.forEach(function (event) {
+            events.forEach((event) => {
                 const eventProps = require(`../../../${event}`);
 
                 eventsProps.push(eventProps);
