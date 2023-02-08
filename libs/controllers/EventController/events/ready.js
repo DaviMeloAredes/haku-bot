@@ -1,6 +1,10 @@
+const commandController = require('../../CommandController/CommandController')
+
 module.exports = {
     name: 'ready',
-    run: function (client) {
-        console.log('OK!');
+    run: async function (client) {
+        await commandController.handleCommands();
+
+        console.log('Online on', client.user.username)
     }
 }
