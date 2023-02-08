@@ -1,5 +1,7 @@
 const client = require('../../client');
 const fg = require('fast-glob');
+const InvalidMissingParamsError = require('../../errors/InvalidMissingParamsError');
+const readFolder = require('../../utils/readFolder');
 
 class EventController {
     #events;
@@ -9,7 +11,7 @@ class EventController {
     }
 
     emitEvents () {
-        this.#events.forEach(event => {
+        this.#events.forEach((event) => {
             try {
                 client.on(event.name, 
                     (args) => event.run(args)
@@ -24,29 +26,20 @@ class EventController {
        const { name, run } = event;
 
         if (!name || !run) 
-            throw new Error('Invalid/Missing event properties.');
+            throw new InvalidMissingParamsError();
 
         this.#events.push(event);
     }
 
     async handleEvents () {
-        const path = 'libs/controllers/EventController/events/**/**.js';
-        const events = await fg(path);
-    
-        const getEventsProps = () => {
-            let eventsProps = [];
+        const path = 'libs/controllers/EventController/events';
+        const files = await readFolder({ path, extension: '.js', returnProps: true });
 
-            events.forEach((event) => {
-                const eventProps = require(`../../../${event}`);
-
-                eventsProps.push(eventProps);
-            });
-
-            return eventsProps;
-        }
-
-        getEventsProps()
-            .forEach((event) => this.addEvent(event));
+        files.forEach((file) => {
+            const { fileProps } = file;
+            
+            this.addEvent(fileProps);
+        });
 
         this.emitEvents();
     }
