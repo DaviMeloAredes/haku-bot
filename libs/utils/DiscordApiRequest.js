@@ -23,14 +23,14 @@ async function sendRequest({ method, suffix, data }) {
                 method: req.method,
                 headers: req.headers,
                 url: req.url,
-            }).catch((e) => console.log(e));
+            }).catch(console.log);
         case 'post':
             return await axios({
                 method: req.method,
                 headers: req.headers,
                 url: req.url,
                 data: req.data
-            }).catch((e) => console.log(e));
+            }).catch(console.log);
     }
 }
 
@@ -49,7 +49,7 @@ class DiscordApiRequest {
         return res;
     }
 
-    async getApi({ suffix }) {
+    async getFromApi({ suffix }) {
         let res;
 
         await sendRequest(
