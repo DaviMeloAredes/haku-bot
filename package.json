@@ -17,6 +17,7 @@
     "fast-glob": "^3.2.12",
     "husky": "^8.0.3",
     "mongoose": "^6.9.1",
+    "prettier": "2.8.4",
     "ts-node": "^10.9.1"
   }
 }
