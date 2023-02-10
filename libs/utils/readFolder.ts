@@ -2,48 +2,48 @@ import fg from 'fast-glob';
 
 export type FilesProps = { pathFileDir: string; fileProps: any };
 type ReadFolderParams = {
-  path: string;
-  extension?: string;
-  returnProps?: boolean;
+	path: string;
+	extension?: string;
+	returnProps?: boolean;
 };
 
 export default async ({ path, extension, returnProps }: ReadFolderParams) => {
-  let suffix = `/**/**`;
+	let suffix = `/**/**`;
 
-  if (extension) {
-    suffix += extension;
-  }
+	if (extension) {
+		suffix += extension;
+	}
 
-  const files = async () => {
-    let paths: string[] = [];
+	const files = async () => {
+		let paths: string[] = [];
 
-    await fg(`${path}${suffix}`)
-      .then((directories) => (paths = directories))
-      .catch(console.log);
+		await fg(`${path}${suffix}`)
+			.then((directories) => (paths = directories))
+			.catch(console.log);
 
-    return paths;
-  };
+		return paths;
+	};
 
-  if (returnProps) {
-    const filesPaths = await files();
+	if (returnProps) {
+		const filesPaths = await files();
 
-    const getFilesProps = async () => {
-      let filesProps: FilesProps[] = [];
+		const getFilesProps = async () => {
+			let filesProps: FilesProps[] = [];
 
-      filesPaths.forEach(async (file) => {
-        const props = await import(`../../${file}`);
+			filesPaths.forEach(async (file) => {
+				const props = await import(`../../${file}`);
 
-        filesProps.push({
-          pathFileDir: file,
-          fileProps: props,
-        });
-      });
+				filesProps.push({
+					pathFileDir: file,
+					fileProps: props,
+				});
+			});
 
-      return filesProps;
-    };
+			return filesProps;
+		};
 
-    return getFilesProps();
-  }
+		return getFilesProps();
+	}
 
-  return files();
+	return files();
 };
